@@ -1,173 +1,419 @@
-# CloudCart
+# CloudCart - Cloud Native E-Commerce Platform
 
-Production-grade e-commerce platform built with microservices.
-React frontend · Node.js/Express backend · MongoDB · Redis · TypeScript
+## Overview
+
+CloudCart is a cloud-native microservices-based e-commerce platform built using modern DevOps and cloud technologies.
+
+The project demonstrates how a production-style e-commerce application can be deployed using Docker, Kubernetes, AWS EC2, MongoDB, Redis, and a microservices architecture.
+
+This project was designed to showcase:
+
+- Microservices Architecture
+- Containerization with Docker
+- Kubernetes Orchestration
+- AWS Cloud Deployment
+- API Gateway Pattern
+- Redis Caching
+- MongoDB Database Integration
+- Authentication & Authorization
+- High Availability Deployment
 
 ---
 
 ## Architecture
-```
-                                 Browser
-                                    ↓
-                 React Frontend (port 5173 — dev only)
-                                    ↓
-                         API Gateway (port 4000)  ← single entry point
-                                    ↓
-             ┌──────────────────────────────────────────────┐
-             │  Auth Service         (port 4001)            │
-             │  Product Service      (port 4002)            │
-             │  Cart Service         (port 4003)            │
-             │  Order Service        (port 4004)            │
-             │  Payment Service      (port 4005)            │
-             │  Notification Service (port 4006 — internal) │
-             └──────────────────────────────────────────────┘
-                                    ↓
-                             MongoDB + Redis
+
+![Architecture Diagram](architecture/cloudcart_architecture_flowchart.png)
+
+### High-Level Architecture
+
+Users access the React frontend through a web browser.
+
+Requests are routed through an API Gateway which forwards traffic to individual microservices.
+
+Services communicate with:
+
+- MongoDB for persistent storage
+- Redis for caching and performance optimization
+
+The entire platform runs inside a Kubernetes cluster hosted on AWS EC2.
+
+---
+
+## Technology Stack
+
+### Frontend
+
+- React
+- TypeScript
+- Vite
+- Tailwind CSS
+
+### Backend
+
+- Node.js
+- Express.js
+- TypeScript
+
+### Database
+
+- MongoDB
+
+### Cache
+
+- Redis
+
+### Containerization
+
+- Docker
+
+### Container Orchestration
+
+- Kubernetes (K8s)
+
+### Cloud Platform
+
+- AWS EC2
+
+### Networking
+
+- NGINX Ingress Controller
+- Kubernetes Services
+
+---
+
+## Microservices
+
+### Auth Service
+
+Responsible for:
+
+- User Registration
+- User Login
+- JWT Authentication
+- Refresh Tokens
+- User Profile Management
+
+---
+
+### Product Service
+
+Responsible for:
+
+- Product Catalog
+- Product Search
+- Product Categories
+- Featured Products
+
+---
+
+### Cart Service
+
+Responsible for:
+
+- Add To Cart
+- Update Cart
+- Remove Cart Items
+- Cart Persistence
+
+---
+
+### Order Service
+
+Responsible for:
+
+- Order Creation
+- Order Tracking
+- Order History
+- Order Status Management
+
+---
+
+### Payment Service
+
+Responsible for:
+
+- Payment Processing
+- Transaction Validation
+- Payment Status Updates
+
+---
+
+### Notification Service
+
+Responsible for:
+
+- Order Notifications
+- Payment Notifications
+- User Notifications
+
+---
+
+### Gateway Service
+
+Responsible for:
+
+- API Routing
+- Request Forwarding
+- Authentication Validation
+- Centralized Access Point
+
+---
+
+## Kubernetes Deployment
+
+The platform is deployed inside a Kubernetes cluster consisting of:
+
+### Control Plane Node
+
+Handles:
+
+- API Server
+- Scheduler
+- Controller Manager
+- etcd
+
+### Worker Node 1
+
+Runs:
+
+- Gateway Service
+- Auth Service
+- Product Service
+- Cart Service
+
+### Worker Node 2
+
+Runs:
+
+- Order Service
+- Payment Service
+- Notification Service
+- Redis
+
+### Database Layer
+
+Runs:
+
+- MongoDB
+
+---
+
+## Features
+
+### User Features
+
+- User Registration
+- Secure Login
+- Product Browsing
+- Product Search
+- Shopping Cart
+- Checkout
+- Order Placement
+- Order History
+
+### Admin Features
+
+- Product Management
+- Category Management
+- Inventory Tracking
+
+### Infrastructure Features
+
+- Dockerized Services
+- Kubernetes Deployments
+- Service Discovery
+- Load Balancing
+- Redis Caching
+- Centralized Gateway
+
+---
+
+## Project Structure
+
+```text
+cloudcart
+│
+├── apps
+├── services
+├── packages
+├── scripts
+│
+├── kubernetes
+│   ├── auth-deployment.yaml
+│   ├── auth-service.yaml
+│   ├── cart-deployment.yaml
+│   ├── product-deployment.yaml
+│   ├── order-deployment.yaml
+│   ├── payment-deployment.yaml
+│   ├── mongodb-deployment.yaml
+│   ├── redis-deployment.yaml
+│   └── ingress.yaml
+│
+├── architecture
+│   └── cloudcart_architecture_flowchart.png
+│
+├── screenshots
+│
+└── README.md
 ```
 
 ---
 
-## Prerequisites
+## Docker Images
 
-- Node.js v20+
-- pnpm v8+
-- MongoDB (local or Atlas)
-- Redis (local or Upstash)
+The following services are containerized using Docker:
+
+- CloudCart Frontend
+- Auth Service
+- Product Service
+- Cart Service
+- Order Service
+- Payment Service
+- Notification Service
+
+Docker images are stored in Docker Hub and deployed through Kubernetes Deployments.
 
 ---
 
-## Quick start
+## Deployment Workflow
+
+### Build Docker Images
 
 ```bash
-# 1. Clone and install
-git clone https://github.com/yourname/cloudcart.git
-cd cloudcart
-pnpm install
-
-# 2. Build shared package
-pnpm --filter @cloudcart/shared build
-
-# 3. Copy env files and fill in values
-cp services/auth/.env.example        services/auth/.env
-cp services/product/.env.example     services/product/.env
-cp services/cart/.env.example        services/cart/.env
-cp services/order/.env.example       services/order/.env
-cp services/payment/.env.example     services/payment/.env
-cp services/gateway/.env.example     services/gateway/.env
-cp services/notification/.env.example services/notification/.env
-
-# 4. Seed the database
-pnpm seed
-
-# 5. Start everything
-pnpm dev
+docker build -t image-name .
 ```
 
----
-
-## Environment variables
-
-All services share the same MongoDB URI and JWT secret.
-Copy the tables below into each service's `.env` file.
-
-### Required across all services
-
-| Variable | Description |
-|---|---|
-| `MONGODB_URI` | MongoDB connection string |
-| `JWT_ACCESS_SECRET` | Min 32-char secret for access tokens |
-
-### Auth service (port 4001)
-
-| Variable | Default | Description |
-|---|---|---|
-| `JWT_REFRESH_SECRET` | — | Min 32-char refresh token secret |
-| `JWT_ACCESS_EXPIRES` | `15m` | Access token expiry |
-| `JWT_REFRESH_EXPIRES` | `7d` | Refresh token expiry |
-| `BCRYPT_ROUNDS` | `12` | bcrypt work factor |
-
-### Product service (port 4002)
-
-| Variable | Default | Description |
-|---|---|---|
-| `REDIS_URL` | `redis://localhost:6379` | Redis connection |
-| `PRODUCT_CACHE_TTL` | `300` | Cache TTL in seconds |
-
-### Cart service (port 4003)
-
-| Variable | Default | Description |
-|---|---|---|
-| `PRODUCT_SERVICE_URL` | `http://localhost:4002` | Product service URL |
-| `CART_TTL_AUTHENTICATED` | `604800` | 7 days in seconds |
-| `CART_TTL_GUEST` | `86400` | 24 hours in seconds |
-
-### Order service (port 4004)
-
-| Variable | Default | Description |
-|---|---|---|
-| `CART_SERVICE_URL` | `http://localhost:4003` | Cart service URL |
-| `PRODUCT_SERVICE_URL` | `http://localhost:4002` | Product service URL |
-| `NOTIFICATION_SERVICE_URL` | `http://localhost:4006` | Notification service URL |
-
-### Payment service (port 4005)
-
-| Variable | Default | Description |
-|---|---|---|
-| `ORDER_SERVICE_URL` | `http://localhost:4004` | Order service URL |
-| `PAYMENT_SUCCESS_RATE` | `90` | % of payments that succeed (dev) |
-
-### Gateway (port 4000)
-
-| Variable | Default | Description |
-|---|---|---|
-| `RATE_LIMIT_MAX` | `100` | Requests per window per IP |
-| `AUTH_RATE_LIMIT_MAX` | `10` | Auth attempts per window |
-
----
-
-## Test accounts (after seeding)
-
-| Role | Email | Password |
-|---|---|---|
-| Admin | admin@cloudcart.dev | Admin@123 |
-| Customer | john@example.com | Customer@123 |
-
----
-
-## API documentation
-
-Each service exposes Swagger UI in development:
-
-- Auth service: http://localhost:4001/api/auth/docs
-
----
-
-## Scripts
+### Push Images
 
 ```bash
-pnpm dev               # Start all services + frontend + gateway concurrently
-pnpm dev:gateway       # Gateway only
-pnpm dev:auth          # Auth service only
-pnpm dev:product       # Product service only
-pnpm dev:cart          # Cart service only
-pnpm dev:order         # Order service only
-pnpm dev:payment       # Payment service only
-pnpm dev:notification  # Notification service only
-pnpm dev:web           # React frontend only
-pnpm build:all         # Build everything
-pnpm typecheck         # TypeScript check across repo
-pnpm lint              # ESLint across repo
-pnpm seed              # Seed database with sample data
+docker push image-name
+```
+
+### Deploy to Kubernetes
+
+```bash
+kubectl apply -f kubernetes/
+```
+
+### Verify Deployment
+
+```bash
+kubectl get pods -n cloudcart
+```
+
+```bash
+kubectl get svc -n cloudcart
+```
+
+```bash
+kubectl get ingress -n cloudcart
 ```
 
 ---
 
-## Tech stack
+## Monitoring Commands
 
-**Frontend:** React 18 · TypeScript · Vite · Tailwind CSS · Redux Toolkit · RTK Query · React Router · Framer Motion · Recharts · React Hook Form · Zod
+Check Pods
 
-**Backend:** Node.js · Express · TypeScript · Mongoose · ioredis · jsonwebtoken · bcryptjs · Zod · Swagger
+```bash
+kubectl get pods -n cloudcart
+```
 
-**Database:** MongoDB · Redis
+Check Services
 
-**Architecture:** Microservices · REST API · JWT auth · RBAC · Cache-aside pattern
+```bash
+kubectl get svc -n cloudcart
+```
+
+Check Deployments
+
+```bash
+kubectl get deployments -n cloudcart
+```
+
+Check Logs
+
+```bash
+kubectl logs deployment/auth -n cloudcart
+```
+
+Describe Resources
+
+```bash
+kubectl describe deployment auth -n cloudcart
+```
+
+---
+
+## Screenshots
+
+### Home Page
+
+(Add screenshot)
+
+### Product Catalog
+
+(Add screenshot)
+
+### Cart Page
+
+(Add screenshot)
+
+### Checkout
+
+(Add screenshot)
+
+### Order Confirmation
+
+(Add screenshot)
+
+### Kubernetes Cluster
+
+(Add screenshot)
+
+### Running Pods
+
+(Add screenshot)
+
+---
+
+## Challenges Solved
+
+During development and deployment the following challenges were addressed:
+
+- Kubernetes Service Discovery
+- API Gateway Authentication
+- Redis Connectivity Issues
+- MongoDB Integration
+- JWT Token Validation
+- Cross-Service Communication
+- Kubernetes Ingress Configuration
+- Cookie-Based Authentication
+- Deployment Debugging
+
+---
+
+## Future Improvements
+
+- CI/CD Pipeline using GitHub Actions
+- Helm Charts
+- Monitoring using Prometheus
+- Grafana Dashboards
+- Persistent Volumes for MongoDB
+- Auto Scaling using HPA
+- SSL/TLS with Cert Manager
+- Production Domain Configuration
+
+---
+
+## Author
+
+Suphin Hassainar
+
+Cloud & DevOps Engineer
+
+Technologies:
+
+AWS | Docker | Kubernetes | Node.js | React | MongoDB | Redis
+
+---

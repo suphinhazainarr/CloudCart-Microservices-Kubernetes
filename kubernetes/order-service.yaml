@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+
+metadata:
+  name: order
+  namespace: cloudcart
+
+spec:
+  selector:
+    app: order
+
+  ports:
+  - port: 4004
+    targetPort: 4004
+
+  type: ClusterIP

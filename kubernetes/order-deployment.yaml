@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: order
+  namespace: cloudcart
+
+spec:
+  replicas: 1
+
+  selector:
+    matchLabels:
+      app: order
+
+  template:
+    metadata:
+      labels:
+        app: order
+
+    spec:
+      containers:
+      - name: order
+
+        image: suphinhazainarr/cloudcart-order:v1
+
+        ports:
+        - containerPort: 4004
+
+        envFrom:
+        - configMapRef:
+            name: order-config
+
+        env:
+        - name: JWT_ACCESS_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: auth-secret
+              key: JWT_ACCESS_SECRET

@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+
+metadata:
+  name: web
+  namespace: cloudcart
+
+spec:
+  selector:
+    app: web
+
+  ports:
+  - port: 80
+    targetPort: 80
+
+  type: ClusterIP

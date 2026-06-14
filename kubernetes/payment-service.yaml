@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+
+metadata:
+  name: payment
+  namespace: cloudcart
+
+spec:
+  selector:
+    app: payment
+
+  ports:
+  - port: 4005
+    targetPort: 4005
+
+  type: ClusterIP

@@ -1,0 +1,23 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+
+metadata:
+  name: gateway-ingress
+  namespace: cloudcart
+
+spec:
+  ingressClassName: nginx
+
+  rules:
+  - host: gateway.cloudcart.local
+
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+
+        backend:
+          service:
+            name: gateway
+            port:
+              number: 4000

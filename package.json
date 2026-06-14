@@ -1,0 +1,33 @@
+{
+  "name": "cloudcart",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "concurrently -n gateway,auth,product,cart,order,payment,notification,web -c cyan,green,blue,yellow,magenta,red,gray,white \"pnpm dev:gateway\" \"pnpm dev:auth\" \"pnpm dev:product\" \"pnpm dev:cart\" \"pnpm dev:order\" \"pnpm dev:payment\" \"pnpm dev:notification\" \"pnpm dev:web\"",
+    "dev:gateway": "pnpm --filter @cloudcart/gateway dev",
+    "dev:auth":    "pnpm --filter @cloudcart/auth dev",
+    "dev:product": "pnpm --filter @cloudcart/product dev",
+    "dev:cart":    "pnpm --filter @cloudcart/cart dev",
+    "dev:order":   "pnpm --filter @cloudcart/order dev",
+    "dev:payment": "pnpm --filter @cloudcart/payment dev",
+    "dev:notification": "pnpm --filter @cloudcart/notification dev",
+    "dev:web":     "pnpm --filter @cloudcart/web dev",
+    "build:all": "pnpm --filter './packages/**' build && pnpm --filter './services/**' build && pnpm --filter './apps/**' build",
+    "lint": "eslint . --ext .ts,.tsx",
+    "typecheck": "tsc --noEmit",
+    "seed": "pnpm --filter @cloudcart/scripts seed"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^7.0.0",
+    "@typescript-eslint/parser": "^7.0.0",
+    "concurrently": "^9.2.1",
+    "eslint": "^8.57.0",
+    "eslint-config-prettier": "^9.0.0",
+    "prettier": "^3.2.0",
+    "typescript": "^5.4.0"
+  },
+  "engines": {
+    "node": ">=20.0.0",
+    "pnpm": ">=8.0.0"
+  }
+}

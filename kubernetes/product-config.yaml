@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: ConfigMap
+
+metadata:
+  name: product-config
+  namespace: cloudcart
+
+data:
+  PORT: "4002"
+  NODE_ENV: "production"
+
+  MONGODB_URI: "mongodb://mongodb:27017/cloudcart"
+
+  REDIS_URL: "redis://redis:6379"

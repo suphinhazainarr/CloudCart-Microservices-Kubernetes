@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+
+metadata:
+  name: auth
+  namespace: cloudcart
+
+spec:
+  selector:
+    app: auth
+
+  ports:
+  - port: 4001
+    targetPort: 4001
+
+  type: ClusterIP

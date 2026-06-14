@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: auth
+  namespace: cloudcart
+
+spec:
+  replicas: 1
+
+  selector:
+    matchLabels:
+      app: auth
+
+  template:
+    metadata:
+      labels:
+        app: auth
+
+    spec:
+      containers:
+      - name: auth
+
+        image: suphinhazainarr/cloudcart-auth-service:v1
+
+        ports:
+        - containerPort: 4001
+
+        envFrom:
+        - configMapRef:
+            name: auth-config
+
+        env:
+        - name: JWT_ACCESS_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: auth-secret
+              key: JWT_ACCESS_SECRET
+
+        - name: JWT_REFRESH_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: auth-secret
+              key: JWT_REFRESH_SECRET
+
+        - name: BCRYPT_ROUNDS
+          value: "12"

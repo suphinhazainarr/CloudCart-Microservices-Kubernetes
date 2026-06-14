@@ -1,0 +1,23 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+
+metadata:
+  name: payment-ingress
+  namespace: cloudcart
+
+spec:
+  ingressClassName: nginx
+
+  rules:
+  - host: payment.cloudcart.local
+
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+
+        backend:
+          service:
+            name: payment
+            port:
+              number: 4005

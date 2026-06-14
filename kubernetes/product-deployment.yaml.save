@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: product
+  namespace: cloudcart
+
+spec:
+  replicas: 1
+
+  selector:
+    matchLabels:
+      app: product
+
+  template:
+    metadata:
+      labels:
+        app: product
+
+    spec:
+containers:
+- name: product
+
+  image: suphinhazainarr/cloudcart-product:v1
+
+  ports:
+  - containerPort: 4002
+
+  envFrom:
+  - configMapRef:
+      name: product-config
+
+  env:
+  - name: JWT_ACCESS_SECRET
+    valueFrom:
+      secretKeyRef:
+        name: auth-secret
+        key: JWT_ACCESS_SECRETT

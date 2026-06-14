@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: web
+  namespace: cloudcart
+
+spec:
+  replicas: 1
+
+  selector:
+    matchLabels:
+      app: web
+
+  template:
+    metadata:
+      labels:
+        app: web
+
+    spec:
+      containers:
+      - name: web
+        image: suphinhazainarr/cloudcart-web:v1
+
+        ports:
+        - containerPort: 80

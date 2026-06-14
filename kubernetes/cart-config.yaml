@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cart-config
+  namespace: cloudcart
+
+data:
+  PORT: "4003"
+  NODE_ENV: "production"
+  MONGODB_URI: "mongodb://mongodb:27017/cloudcart"
+
+  PRODUCT_SERVICE_URL: "http://product:4002"
+
+  REDIS_URL: "redis://localhost:6379"
+
+  CORS_ORIGIN: "*"
+
+  CART_TTL_AUTHENTICATED: "604800"
+
+  CART_TTL_GUEST: "86400"

@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: ConfigMap
+
+metadata:
+  name: order-config
+  namespace: cloudcart
+
+data:
+  NODE_ENV: "production"
+  PORT: "4004"
+
+  MONGODB_URI: "mongodb://mongodb:27017/cloudcart"
+
+  CART_SERVICE_URL: "http://cart:4003"
+
+  PRODUCT_SERVICE_URL: "http://product:4002"
+
+  NOTIFICATION_SERVICE_URL: "http://notification:4006"
+
+  CORS_ORIGIN: "*"

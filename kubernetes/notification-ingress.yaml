@@ -1,0 +1,23 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+
+metadata:
+  name: notification-ingress
+  namespace: cloudcart
+
+spec:
+  ingressClassName: nginx
+
+  rules:
+  - host: notification.cloudcart.local
+
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+
+        backend:
+          service:
+            name: notification
+            port:
+              number: 4006
